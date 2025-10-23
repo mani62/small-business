@@ -12,7 +12,7 @@ describe('User Registration', function () {
             'password_confirmation' => 'Password123!',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/v1/auth/register', $userData);
 
         $response->assertStatus(201)
             ->assertJsonStructure([
@@ -49,7 +49,7 @@ describe('User Registration', function () {
             'password_confirmation' => '456', // Doesn't match
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/v1/auth/register', $userData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['name', 'email', 'password', 'password_confirmation']);
@@ -65,7 +65,7 @@ describe('User Registration', function () {
             'password_confirmation' => 'Password123!',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/v1/auth/register', $userData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
@@ -79,7 +79,7 @@ describe('User Registration', function () {
             'password_confirmation' => 'weak',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/v1/auth/register', $userData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['password']);
@@ -93,7 +93,7 @@ describe('User Registration', function () {
             'password_confirmation' => 'Password123!',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/v1/auth/register', $userData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
@@ -107,7 +107,7 @@ describe('User Registration', function () {
             'password_confirmation' => 'Password123!',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/v1/auth/register', $userData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['name']);
@@ -123,7 +123,7 @@ describe('User Registration', function () {
 
         // Make 6 requests (limit is 5)
         for ($i = 0; $i < 6; $i++) {
-            $response = $this->postJson('/api/auth/register', $userData);
+            $response = $this->postJson('/api/v1/auth/register', $userData);
         }
 
         $response->assertStatus(429);
@@ -142,7 +142,7 @@ describe('User Login', function () {
             'password' => 'Password123!',
         ];
 
-        $response = $this->postJson('/api/auth/login', $loginData);
+        $response = $this->postJson('/api/v1/auth/login', $loginData);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -176,7 +176,7 @@ describe('User Login', function () {
             'password' => 'WrongPassword',
         ];
 
-        $response = $this->postJson('/api/auth/login', $loginData);
+        $response = $this->postJson('/api/v1/auth/login', $loginData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
@@ -188,7 +188,7 @@ describe('User Login', function () {
             'password' => 'Password123!',
         ];
 
-        $response = $this->postJson('/api/auth/login', $loginData);
+        $response = $this->postJson('/api/v1/auth/login', $loginData);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
@@ -207,7 +207,7 @@ describe('User Login', function () {
 
         // Make 6 requests (limit is 5)
         for ($i = 0; $i < 6; $i++) {
-            $response = $this->postJson('/api/auth/login', $loginData);
+            $response = $this->postJson('/api/v1/auth/login', $loginData);
         }
 
         $response->assertStatus(429);
@@ -221,7 +221,7 @@ describe('User Authentication', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->getJson('/api/auth/me');
+        ])->getJson('/api/v1/auth/me');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -243,7 +243,7 @@ describe('User Authentication', function () {
     });
 
     it('denies unauthenticated user access to protected route', function () {
-        $response = $this->getJson('/api/auth/me');
+        $response = $this->getJson('/api/v1/auth/me');
 
         $response->assertStatus(401);
     });
@@ -256,7 +256,7 @@ describe('User Logout', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/auth/logout');
+        ])->postJson('/api/v1/auth/logout');
 
         $response->assertStatus(200)
             ->assertJson([
@@ -277,7 +277,7 @@ describe('User Logout', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token1,
-        ])->postJson('/api/auth/logout-all');
+        ])->postJson('/api/v1/auth/logout-all');
 
         $response->assertStatus(200)
             ->assertJson([
@@ -299,7 +299,7 @@ describe('Token Management', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/auth/refresh');
+        ])->postJson('/api/v1/auth/refresh');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
