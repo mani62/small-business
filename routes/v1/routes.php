@@ -2,15 +2,16 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API v1 Project Routes
+| API v1 Routes
 |--------------------------------------------------------------------------
 |
-| Here are the project management routes for API version 1.
+| Here are the project and task management routes for API version 1.
 | All routes are protected with authentication middleware.
 |
 */
@@ -58,4 +59,22 @@ Route::middleware(['auth:sanctum'])->prefix('projects')->group(function () {
     Route::delete('/{id}/force-delete', [ProjectController::class, 'forceDelete']);
     Route::post('/bulk-update-status', [ProjectController::class, 'bulkUpdateStatus']);
     Route::post('/{project}/duplicate', [ProjectController::class, 'duplicate']);
+});
+
+// Protected task routes with rate limiting
+Route::middleware(['auth:sanctum', 'task.rate.limit:100,60'])->prefix('tasks')->group(function () {
+    // Basic CRUD operations
+    Route::get('/', [TaskController::class, 'index']);
+    Route::post('/', [TaskController::class, 'store']);
+    Route::get('/statistics', [TaskController::class, 'statistics']);
+    Route::get('/search', [TaskController::class, 'search']);
+    Route::get('/status/{status}', [TaskController::class, 'byStatus']);
+    Route::get('/overdue', [TaskController::class, 'overdue']);
+    Route::get('/{task}', [TaskController::class, 'show']);
+    Route::put('/{task}', [TaskController::class, 'update']);
+    Route::patch('/{task}', [TaskController::class, 'update']);
+    Route::delete('/{task}', [TaskController::class, 'destroy']);
+    
+    // Additional operations
+    Route::post('/bulk-update-status', [TaskController::class, 'bulkUpdateStatus']);
 });
