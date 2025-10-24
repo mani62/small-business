@@ -1,61 +1,194 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Small Business Task Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based task management system with CRUD operations, filtering, pagination, and advanced design patterns implementation.
 
-## About Laravel
+## 🚀 Features Implemented
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Functionality
+- **CRUD Operations**: Complete Create, Read, Update, Delete operations for tasks
+- **Task Fields**: `title`, `description`, `status` (todo/in-progress/done), `due_date`
+- **Filtering**: By status, due date, full-text search, overdue tasks
+- **Pagination**: Configurable pagination with metadata
+- **Sorting**: Sort by title, status, due date, created_at, updated_at
+- **User Isolation**: Users can only access their own tasks
+- **Rate Limiting**: 100 requests per minute per user
+- **Statistics**: Task statistics and analytics
+- **Bulk Operations**: Bulk status updates
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Design Patterns Applied
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### 1. Repository Pattern
+- **Interface**: `TaskRepositoryInterface`
+- **Implementation**: `TaskRepository`
+- **Purpose**: Abstracts data access logic from business logic
+- **Benefits**: Testability, maintainability, flexibility
 
-## Learning Laravel
+#### 2. Strategy Pattern
+- **Interface**: `FilterStrategyInterface`
+- **Implementations**:
+  - `StatusFilterStrategy` - Filter by task status
+  - `DueDateFilterStrategy` - Filter by due date
+  - `SearchFilterStrategy` - Full-text search
+  - `OverdueFilterStrategy` - Filter overdue tasks
+- **Context**: `FilterContext` - Applies multiple strategies
+- **Purpose**: Encapsulates filtering algorithms, makes them interchangeable
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### 3. Observer Pattern
+- **Observer**: `TaskObserver`
+- **Events**: `created`, `updated`, `deleted`
+- **Purpose**: Handles side effects when task state changes
+- **Benefits**: Decoupled logging, extensible for notifications
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Architecture Components
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Models
+- **Task Model**: Eloquent model with relationships, scopes, and computed properties
+- **User Model**: Extended with task relationship
 
-## Laravel Sponsors
+#### Services
+- **TaskService**: Business logic layer with comprehensive task operations
+- **FilterContext**: Strategy pattern implementation for filtering
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### DTOs (Data Transfer Objects)
+- **TaskDTO**: Single task representation
+- **CreateTaskDTO**: Task creation data
+- **UpdateTaskDTO**: Task update data
+- **TaskListDTO**: Paginated task list
+- **TaskStatisticsDTO**: Statistics data
 
-### Premium Partners
+#### Controllers
+- **TaskController**: HTTP request handling with proper validation and error handling
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+#### Requests
+- **CreateTaskRequest**: Validation for task creation
+- **UpdateTaskRequest**: Validation for task updates
 
-## Contributing
+#### Middleware
+- **TaskRateLimitMiddleware**: Custom rate limiting for task endpoints
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Enums
+- **TaskStatus**: Type-safe status constants with helper methods
 
-## Code of Conduct
+## 🛠️ Technical Implementation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Key Features
+- **Type Safety**: PHP 8+ features with proper type hints
+- **Validation**: Comprehensive request validation
+- **Error Handling**: Structured error responses with proper HTTP status codes
+- **Logging**: Detailed logging for all operations
+- **Testing**: Comprehensive test coverage (18 tests)
+- **Security**: Authentication required, user isolation
+- **Performance**: Database indexes, efficient queries
 
-## Security Vulnerabilities
+## 📋 API Documentation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+For complete API documentation including all endpoints, request/response examples, and testing instructions, please refer to:
 
-## License
+**[📖 Complete API Documentation](API_DOCUMENTATION.md)**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This documentation includes:
+- **30 API Endpoints** across Authentication, Tasks, and Projects
+- **Complete Request/Response Examples** with JSON samples
+- **Query Parameters** and validation rules
+- **Error Handling** with all HTTP status codes
+- **Rate Limiting** information
+- **cURL Examples** for testing
+- **Status Values** and enums
+
+## 🧪 Testing
+
+The system includes comprehensive test coverage:
+
+### Test Files
+- `tests/Feature/TaskTest.php` - Main functionality tests (14 tests)
+- `tests/Feature/TaskAuthTest.php` - Authentication tests (4 tests)
+
+### Test Coverage
+- ✅ CRUD operations
+- ✅ Authentication requirements
+- ✅ User isolation
+- ✅ Validation
+- ✅ Filtering and search
+- ✅ Pagination
+- ✅ Sorting
+- ✅ Statistics
+- ✅ Bulk operations
+- ✅ Error handling
+
+### Running Tests
+```bash
+# Run all task tests
+php artisan test tests/Feature/TaskTest.php tests/Feature/TaskAuthTest.php
+
+# Run with coverage
+php artisan test --coverage
+```
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+- PHP 8.1+
+- Laravel 10+
+- MySQL/PostgreSQL
+- Composer
+
+### Installation Steps
+1. Clone the repository
+2. Install dependencies: `composer install`
+3. Copy environment file: `cp .env.example .env`
+4. Generate application key: `php artisan key:generate`
+5. Configure database in `.env`
+6. Run migrations: `php artisan migrate`
+7. Run tests: `php artisan test`
+
+## 📊 Rate Limiting
+
+- **Limit**: 100 requests per minute per user
+- **Scope**: All task-related endpoints
+- **Headers**: Includes rate limit information in responses
+- **Fallback**: IP-based limiting for unauthenticated requests
+
+## 🔒 Security Features
+
+- **Authentication**: Laravel Sanctum token-based authentication
+- **Authorization**: User isolation (users can only access their own tasks)
+- **Validation**: Comprehensive input validation
+- **Rate Limiting**: Prevents abuse and ensures fair usage
+- **SQL Injection Protection**: Eloquent ORM with parameterized queries
+- **XSS Protection**: Proper output escaping
+
+## 📈 Performance Optimizations
+
+- **Database Indexes**: Optimized for common query patterns
+- **Eager Loading**: Prevents N+1 query problems
+- **Pagination**: Limits data transfer
+- **Query Optimization**: Efficient filtering and sorting
+- **Caching**: Ready for implementation (Redis/Memcached)
+
+## 🎯 Future Enhancements
+
+- **Soft Deletes**: Implement soft delete functionality
+- **Task Categories**: Add categorization system
+- **File Attachments**: Support for task attachments
+- **Notifications**: Real-time notifications for task updates
+- **Collaboration**: Multi-user task assignment
+- **Time Tracking**: Track time spent on tasks
+- **Reporting**: Advanced analytics and reporting
+- **API Versioning**: Support for multiple API versions
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## 📞 Support
+
+For support and questions, please open an issue in the repository.
